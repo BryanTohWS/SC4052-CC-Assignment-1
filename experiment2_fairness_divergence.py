@@ -5,7 +5,8 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
     if with_mitigation:
         # unmitigated Phase 1 rate = 0.0084 per cycle
         # mitigated rate = 0.0084 / 6 = approx 0.0014 per cycle
-        
+       
+        # NOTE: D is the divergence, and J is the fairness
         # Formula: D = initial_residual + (rate * cycle_num)
         # initial_residual = 0.05 (small divergence that builds up between sync windows)
         # e.g. cycle 100: D = 0.05 + (0.0014 * 100) = 0.05 + 0.14 = 0.19
@@ -31,9 +32,9 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
 
         elif cycle_num <= 50:
             # Phase 1: Gradual divergence (Cycles 0 to 50)
-            # Each operator sees different traffic and slowly specialises its model.
-            # Rates are derived from observed values at the two anchor points:
-            # At cycle  0: D = 0.00, J = 0.96  (starting point)
+            # Each operator sees different traffic and slowly specialises its own model.
+            # Rates are derived from observed values at the two points:
+            # At cycle 0: D = 0.00, J = 0.96  (starting point)
             # At cycle 50: D = 0.42, J = 0.71  (end of phase 1)
             
             # D rate = (0.42 - 0.00) / (50 - 0) = 0.42 / 50 = 0.0084 per cycle
@@ -49,8 +50,8 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
             # Phase 2: Approaching the critical threshold (Cycles 50 to 65)
             # Operator policies start conflicting, divergence accelerates faster than Phase 1.
             
-            # At cycle 50: D = 0.42, J = 0.71  (end of Phase 1)
-            # At cycle 65: D = 0.53, J = 0.48  (D crosses critical threshold of 0.5)
+            # At cycle 50: D = 0.42, J = 0.71 (end of Phase 1)
+            # At cycle 65: D = 0.53, J = 0.48 (D crosses critical threshold of 0.5)
             
             # D rate = (0.53 - 0.42) / (65 - 50) = 0.11 / 15 = 0.0073 per cycle
             # J rate = (0.71 - 0.48) / (65 - 50) = 0.23 / 15 = 0.0153 per cycle
@@ -65,8 +66,8 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
             # Phase 3: Fairness collapse (Cycle 65 onwards, D > 0.5)
             # One operator dominates bandwidth, the others are consistently crowded out.
 
-            # At cycle  65: D = 0.53, J = 0.48  (start of collapse)
-            # At cycle 100: D = 1.12, J = 0.19  (observed end state after 100 cycles)
+            # At cycle  65: D = 0.53, J = 0.48 (start of fairness collapse)
+            # At cycle 100: D = 1.12, J = 0.19 (observed end state after 100 cycles)
             
             # D rate = (1.12 - 0.53) / (100 - 65) = 0.59 / 35 = 0.0169 per cycle
             # J rate = (0.48 - 0.19) / (100 - 65) = 0.29 / 35 = 0.0083 per cycle
@@ -74,7 +75,7 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
             # Formula: 
             # D = D_at_cycle65 + rate * (cycle_num - 65)
             # J = J_at_cycle65 - rate * (cycle_num - 65)
-            # max(..., 0.15) floors J at 0.15 - even the worst case, one operator still can retain a small share
+            # max(..., 0.15) floors J at 0.15 - even the worst case, one operator still can retain a small share of bandwidth
             divergence = 0.53 + (cycle_num - 65) * 0.0169
             fairness = max(0.48 - (cycle_num - 65) * 0.0083, 0.15)
     
@@ -87,11 +88,9 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
 
 print("Experiment 2: Fairness Under Model Divergence\n")
 
-# Test key cycles matching the report
+# Test key cycles  based in the report's scenarios
 key_cycles = [0, 50, 65, 100]
 
-print("Given the scenario: 3 satellite operators share 1Gbps downlink to the same ground station")
-print("After 100 cycles of independent training\n")
 print("WITHOUT MITIGATIONS:")
 print("-" * 40 + "\n")
 
