@@ -3,7 +3,6 @@ import numpy as np
 
 def simulate_fairness_collapse(cycle_num, with_mitigation=False):
     if with_mitigation:
-        # With mitigation, periodic model sync slows divergence approx. 6x compared to Phase 1:
         # unmitigated Phase 1 rate = 0.0084 per cycle
         # mitigated rate = 0.0084 / 6 = approx 0.0014 per cycle
         
@@ -13,7 +12,6 @@ def simulate_fairness_collapse(cycle_num, with_mitigation=False):
         # The min(..., 0.20) function caps D at 0.20 - sync prevents divergence from going higher
         divergence = min(0.05 + cycle_num * 0.0014, 0.20)
 
-        # Shared reward shaping slows fairness degradation approx. 10x compared to Phase 1:
         # unmitigated Phase 1 rate = 0.005 per cycle
         # mitigated rate = 0.005 / 10 = 0.0005 per cycle
         
