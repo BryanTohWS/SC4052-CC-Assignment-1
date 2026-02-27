@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
+# Codes for Experiment 1: Optimal Prediction Horizon
 def simulate_prediction_horizon(tau_pred):
     # Base performance parameters
     link_capacity_mbps = 1000  # 1 Gbps link

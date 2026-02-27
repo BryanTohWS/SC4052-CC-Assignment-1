@@ -1,6 +1,6 @@
 import numpy as np
 
-
+# Codes for Experiment 2: Fairness Under Model Divergence
 def simulate_fairness_collapse(cycle_num, with_mitigation=False):
     if with_mitigation:
         # unmitigated Phase 1 rate = 0.0084 per cycle
