@@ -40,4 +40,3 @@ python experiment1_prediction_horizon.py
 # Experiment 2: Fairness Under Model Divergence
 python experiment2_fairness_divergence.py
 ```
-
